@@ -1,11 +1,11 @@
 {
-  "name": "react-simple-animation",
+  "name": "react-native-simple-animate",
   "author": {
     "name": "Eduardo Pinheiro",
     "email": "hello@eduardopinheiro.dev"
   },
   "repository": {
-    "url": "https://github.com/eduardo-pinheiro/react-simple-animate",
+    "url": "https://github.com/eduardo-pinheiro/react-native-simple-animate",
     "type": "git"
   },
   "version": "1.0.0",
