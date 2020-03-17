@@ -1,7 +1,4 @@
-import { Animate } from './components/Animate';
-import { AnimateConfig } from './components/AnimateConfig';
-
+import { SimpleTest } from './components/SimpleTest';
 export {
-  Animate,
-  AnimateConfig,
+  SimpleTest,
 };
