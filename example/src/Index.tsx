@@ -1,14 +1,28 @@
 import React from 'react';
-import { SimpleTest } from './reactComponentLib';
-import { View, StyleSheet } from 'react-native';
+import { Animate } from './reactComponentLib';
+import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 
 export default class Index extends React.Component<any, any>{
+
+  constructor(props: any) {
+    super(props);
+    this.state = {
+      isVisible: false,
+    }
+  }
+
   render() {
     return (
       <View style={styles.container}>
-        <SimpleTest
-          text="Funcionaaandu"
-        />
+        <TouchableOpacity onPress={() => this.setState({ isVisible: !this.state.isVisible })}>
+          <Text>{this.state.isVisible ? 'Esconder' : 'Mostrar'}</Text>
+        </TouchableOpacity>
+        <Animate 
+          isVisible={this.state.isVisible}
+          animeDirection="just_opacity"
+        >
+          <Text>conteudo a ser animado</Text>
+        </Animate>
       </View>
     )
   }
