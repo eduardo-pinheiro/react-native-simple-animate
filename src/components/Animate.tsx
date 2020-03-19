@@ -1,11 +1,12 @@
 import React from 'react';
 import { AnimateConfig } from './AnimateConfig';
-import { View, Animated, ViewStyle } from 'react-native';
+import { Animated, ViewStyle } from 'react-native';
+import { IAnimationType, ITransitionSpeed } from './AnimationTypes';
 
 interface Props {
   isVisible?: boolean;
-  animeDirection?: 'just_opacity' | 'down' | 'up' | 'left' | 'right';
-  transitionType?: 'slow' | 'regular' | 'fast';
+  animationType?: IAnimationType;
+  transitionSpeed?: ITransitionSpeed;
   transitionMillisecond?: number;
   style?: ViewStyle;
   tagName?: string;
@@ -18,18 +19,13 @@ interface State {
 }
 
 export class Animate extends React.Component<Props, State>{
-  
-  styleOpacityValue: Animated.Value;
-  styleTranslateYValue: Animated.Value;
-  styleTranslateXValue: Animated.Value;
-  
+
+  styleOpacityValue: Animated.Value = new Animated.Value(1);
+  styleTranslateYValue: Animated.Value = new Animated.Value(0);
+  styleTranslateXValue: Animated.Value = new Animated.Value(0);
+
   constructor(props: Props) {
     super(props);
-
-    this.styleOpacityValue = new Animated.Value(0),
-    this.styleTranslateYValue = new Animated.Value(0),
-    this.styleTranslateXValue = new Animated.Value(0),
-
     this.state = {
       isVisibleByDom: false,
       transitionMillisecond: AnimateConfig.millisecondTransitionRegular,
@@ -37,6 +33,8 @@ export class Animate extends React.Component<Props, State>{
   }
 
   componentDidMount = async () => {
+    this.setInitialPositionByStyle();
+
     if (this.props.isVisible !== undefined) {
       const isVisibleByDom = this.props.isVisible;
       this.updateIsVisibleByStyle(isVisibleByDom);
@@ -53,7 +51,7 @@ export class Animate extends React.Component<Props, State>{
     }
 
     if (
-      prevProps.transitionType !== this.props.transitionType ||
+      prevProps.transitionSpeed !== this.props.transitionSpeed ||
       prevProps.transitionMillisecond !== this.props.transitionMillisecond
     ) {
       this.setMillisecondTransition();
@@ -63,7 +61,7 @@ export class Animate extends React.Component<Props, State>{
   setMillisecondTransition() {
     let transitionMillisecond = this.props.transitionMillisecond;
     if (!transitionMillisecond && transitionMillisecond !== 0) {
-      switch (this.props.transitionType) {
+      switch (this.props.transitionSpeed) {
         case 'slow':
           transitionMillisecond = AnimateConfig.millisecondTransitionSlow;
           break;
@@ -82,18 +80,27 @@ export class Animate extends React.Component<Props, State>{
 
   async updateIsVisibleByStyle(isVisible: boolean) {
     if (!isVisible) {
-      if (this.props.animeDirection) this.triggerAnimation(this.props.animeDirection);
-      else this.triggerAnimation("just_opacity");
+      if (this.props.animationType) this.triggerAnimation(this.props.animationType);
+      else this.triggerAnimation("opacity");
     } else {
       await this.setState({ isVisibleByDom: true });
-      //Testar se funciona sem o Timeout
-      setTimeout(() => {
-        this.triggerAnimation("appear");
-      });
+      this.triggerAnimation("appear");
     }
   }
 
-  triggerAnimation(animeDirection: 'appear' | 'just_opacity' | 'down' | 'up' | 'left' | 'right') {
+  setInitialPositionByStyle() {
+    let animationType: 'appear' | IAnimationType;
+
+    if (this.props.isVisible) animationType = 'appear';
+    else animationType = "opacity" || this.props.animationType;
+
+    const newStyles = AnimateConfig.animationType[animationType];
+    this.styleOpacityValue.setValue(newStyles.opacity);
+    this.styleTranslateXValue.setValue(newStyles.translateX);
+    this.styleTranslateYValue.setValue(newStyles.translateY);
+  }
+
+  triggerAnimation(animationType: 'appear' | IAnimationType) {
     const { transitionMillisecond } = this.state;
 
     let {
@@ -102,20 +109,12 @@ export class Animate extends React.Component<Props, State>{
       styleTranslateYValue,
     } = this;
 
-    const newStyles = AnimateConfig.animeDirection[animeDirection];
+    const newStyles = AnimateConfig.animationType[animationType];
 
-    console.log("Antes");
-    console.log("animeDirection", animeDirection);
-    console.log("newStyles", newStyles);
-    console.log("toValue", newStyles.opacity);
-    console.log("duration", transitionMillisecond);
-    
     Animated.timing(styleOpacityValue, {
       toValue: newStyles.opacity,
       duration: transitionMillisecond,
     }).start();
-
-    console.log("Depois");
 
     Animated.timing(styleTranslateXValue, {
       toValue: newStyles.translateX,
@@ -142,14 +141,13 @@ export class Animate extends React.Component<Props, State>{
   render() {
     if (!this.state.isVisibleByDom) return null;
     return (
-      //@ts-ignore
-      <View style={[ this.props.style || {}, {
+      <Animated.View style={[this.props.style || {}, {
         opacity: this.styleOpacityValue,
         translateX: this.styleTranslateXValue,
         translateY: this.styleTranslateYValue,
       }]}>
         {this.props.children}
-      </View>
+      </Animated.View>
     )
   }
 }

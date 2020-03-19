@@ -2,33 +2,33 @@ export class AnimateConfig {
   static millisecondTransitionFast: number = 100;
   static millisecondTransitionRegular: number = 350;
   static millisecondTransitionSlow: number = 500;
-  static animeDirection = {
+  static animationType = {
     appear: {
       translateX: 0,
       translateY: 0,
       opacity: 1,
     },
-    just_opacity: {
+    opacity: {
       translateX: 0,
       translateY: 0,
       opacity: 0,
     },
-    up: {
+    slideUp: {
       translateX: 0,
       translateY: 50,
       opacity: 0,
     },
-    down: {
+    slideDown: {
       translateX: 0,
       translateY: -50,
       opacity: 0,
     },
-    right: {
+    slideRight: {
       translateX: -50,
       translateY: 0,
       opacity: 0,
     },
-    left: {
+    slideLeft: {
       translateX: 50,
       translateY: 0,
       opacity: 0,

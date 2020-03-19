@@ -7,7 +7,7 @@ export default class Index extends React.Component<any, any>{
   constructor(props: any) {
     super(props);
     this.state = {
-      isVisible: false,
+      isVisible: true,
     }
   }
 
