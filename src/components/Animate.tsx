@@ -1,7 +1,7 @@
 import React from 'react';
 import { AnimateConfig } from './AnimateConfig';
 import { Animated, ViewStyle } from 'react-native';
-import { IAnimationType, ITransitionSpeed } from './AnimationTypes';
+import { IAnimationType, ITransitionSpeed } from './AnimateTypes';
 
 interface Props {
   isVisible?: boolean;
@@ -20,7 +20,7 @@ interface State {
 
 export class Animate extends React.Component<Props, State>{
 
-  styleOpacityValue: Animated.Value = new Animated.Value(1);
+  styleOpacityValue: Animated.Value = new Animated.Value(0);
   styleTranslateYValue: Animated.Value = new Animated.Value(0);
   styleTranslateXValue: Animated.Value = new Animated.Value(0);
 
@@ -125,7 +125,7 @@ export class Animate extends React.Component<Props, State>{
       toValue: newStyles.translateY,
       duration: transitionMillisecond,
     }).start(() => {
-      //Esse callback poderia estar em qualquer uma das funções de start acima
+      /*This callback could be stayed in any of before Animated.timing functions*/
       this.updateIsVisibleByDom();
     });
   }
