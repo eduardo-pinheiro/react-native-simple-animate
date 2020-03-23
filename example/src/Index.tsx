@@ -7,7 +7,7 @@ export default class Index extends React.Component<any, any>{
   constructor(props: any) {
     super(props);
     this.state = {
-      isVisible: true,
+      isVisible: false,
     }
   }
 
@@ -15,14 +15,20 @@ export default class Index extends React.Component<any, any>{
     return (
       <View style={styles.container}>
         <TouchableOpacity onPress={() => this.setState({ isVisible: !this.state.isVisible })}>
-          <Text>{this.state.isVisible ? 'Esconder' : 'Mostrar'}</Text>
+          <Text>{`click to ${this.state.isVisible ? 'hide' : 'show'}`}</Text>
         </TouchableOpacity>
-        <Animate 
-          isVisible={this.state.isVisible}
-          animeDirection="just_opacity"
-        >
-          <Text>conteudo a ser animado</Text>
-        </Animate>
+        <View style={styles.wrapperAnimate}>
+          <Animate
+            isVisible={this.state.isVisible}
+            animationType='slideUp'
+            transitionSpeed='fast'
+            animateCallbackFn={(isVisibleInRender) => console.log('isVisibleInRender:', isVisibleInRender)}
+            /*View Props*/
+            style={styles.animate}
+          >
+            <Text style={styles.text}>CONTEND</Text>
+          </Animate>
+        </View>
       </View>
     )
   }
@@ -32,11 +38,22 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'space-evenly',
     position: 'absolute',
     top: 0,
     bottom: 0,
     left: 0,
     right: 0,
+  },
+  wrapperAnimate: {
+    height: 50,
+  },
+  animate: {
+    backgroundColor: '#333333',
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+  },
+  text: {
+    color: '#ffffff'
   }
 });

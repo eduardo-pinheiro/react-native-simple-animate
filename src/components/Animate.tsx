@@ -1,20 +1,20 @@
 import React from 'react';
 import { AnimateConfig } from './AnimateConfig';
-import { Animated, ViewStyle } from 'react-native';
+import { Animated, ViewProps } from 'react-native';
 import { IAnimationType, ITransitionSpeed } from './AnimateTypes';
 
-interface Props {
+export interface IAnimateProps {
   isVisible?: boolean;
   animationType?: IAnimationType;
   transitionSpeed?: ITransitionSpeed;
   transitionMillisecond?: number;
-  style?: ViewStyle;
-  tagName?: string;
-  animateCallbackFn?: Function | any;
+  animateCallbackFn?: (isVisibleInRender?: boolean) => void;
 }
 
+type Props = IAnimateProps & ViewProps;
+
 interface State {
-  isVisibleByDom: boolean;
+  isVisibleInRender: boolean;
   transitionMillisecond: number;
 }
 
@@ -27,7 +27,7 @@ export class Animate extends React.Component<Props, State>{
   constructor(props: Props) {
     super(props);
     this.state = {
-      isVisibleByDom: false,
+      isVisibleInRender: false,
       transitionMillisecond: AnimateConfig.millisecondTransitionRegular,
     }
   }
@@ -36,9 +36,9 @@ export class Animate extends React.Component<Props, State>{
     this.setInitialPositionByStyle();
 
     if (this.props.isVisible !== undefined) {
-      const isVisibleByDom = this.props.isVisible;
-      this.updateIsVisibleByStyle(isVisibleByDom);
-      this.setState({ isVisibleByDom });
+      const isVisibleInRender = this.props.isVisible;
+      this.updateIsVisibleByStyle(isVisibleInRender);
+      this.setState({ isVisibleInRender });
       this.setMillisecondTransition();
     } else {
       this.updateIsVisibleByStyle(true);
@@ -83,7 +83,7 @@ export class Animate extends React.Component<Props, State>{
       if (this.props.animationType) this.triggerAnimation(this.props.animationType);
       else this.triggerAnimation("opacity");
     } else {
-      await this.setState({ isVisibleByDom: true });
+      await this.setState({ isVisibleInRender: true });
       this.triggerAnimation("appear");
     }
   }
@@ -126,22 +126,22 @@ export class Animate extends React.Component<Props, State>{
       duration: transitionMillisecond,
     }).start(() => {
       /*This callback could be stayed in any of before Animated.timing functions*/
-      this.updateIsVisibleByDom();
+      this.updateIsVisibleInRender();
     });
   }
 
-  updateIsVisibleByDom() {
+  updateIsVisibleInRender() {
     if (this.props.isVisible !== undefined) {
-      const isVisibleByDom = this.props.isVisible;
-      if (this.props.animateCallbackFn) this.props.animateCallbackFn(isVisibleByDom);
-      this.setState({ isVisibleByDom });
+      const isVisibleInRender = this.props.isVisible;
+      if (this.props.animateCallbackFn) this.props.animateCallbackFn(isVisibleInRender);
+      this.setState({ isVisibleInRender });
     }
   }
 
   render() {
-    if (!this.state.isVisibleByDom) return null;
+    if (!this.state.isVisibleInRender) return null;
     return (
-      <Animated.View style={[this.props.style || {}, {
+      <Animated.View {...this.props} style={[this.props.style || {}, {
         opacity: this.styleOpacityValue,
         translateX: this.styleTranslateXValue,
         translateY: this.styleTranslateYValue,
