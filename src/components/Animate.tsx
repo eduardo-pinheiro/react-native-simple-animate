@@ -1,13 +1,14 @@
 import React from 'react';
 import { AnimateConfig } from './AnimateConfig';
 import { Animated, ViewProps } from 'react-native';
-import { IAnimationType, ITransitionSpeed } from './AnimateTypes';
+import { IAnimationType, ITransitionSpeed, IAnimationDelay, IAnimationMode } from './AnimateTypes';
 
 export interface AnimateProps {
   isVisible?: boolean;
   animationType?: IAnimationType;
+  animationMode?: IAnimationMode;
+  animationDelay?: IAnimationDelay;
   transitionSpeed?: ITransitionSpeed;
-  transitionMillisecond?: number;
   animateCallbackFn?: (isVisibleInRender?: boolean) => void;
   unmountComponentWhenInvisible?: boolean;
 }
@@ -17,6 +18,7 @@ type Props = AnimateProps & ViewProps;
 interface State {
   isVisibleInRender: boolean;
   transitionMillisecond: number;
+  delayMillisecond: number | undefined;
 }
 
 export class Animate extends React.Component<Props, State> {
@@ -29,6 +31,7 @@ export class Animate extends React.Component<Props, State> {
     this.state = {
       isVisibleInRender: false,
       transitionMillisecond: AnimateConfig.millisecondTransitionRegular,
+      delayMillisecond: undefined,
     };
   }
 
@@ -39,7 +42,8 @@ export class Animate extends React.Component<Props, State> {
       const isVisibleInRender = this.props.isVisible;
       this.updateIsVisibleByStyle(isVisibleInRender);
       this.setState({ isVisibleInRender });
-      this.setMillisecondTransition();
+      await this.setMillisecondTransition();
+      this.setMillisecondDelay();
     } else {
       this.updateIsVisibleByStyle(true);
     }
@@ -50,32 +54,41 @@ export class Animate extends React.Component<Props, State> {
       this.updateIsVisibleByStyle(this.props.isVisible);
     }
 
-    if (
-      prevProps.transitionSpeed !== this.props.transitionSpeed ||
-      prevProps.transitionMillisecond !== this.props.transitionMillisecond
-    ) {
+    if (prevProps.transitionSpeed !== this.props.transitionSpeed) {
       this.setMillisecondTransition();
     }
   };
 
-  setMillisecondTransition() {
-    let transitionMillisecond = this.props.transitionMillisecond;
-    if (!transitionMillisecond && transitionMillisecond !== 0) {
-      switch (this.props.transitionSpeed) {
-        case 'slow':
-          transitionMillisecond = AnimateConfig.millisecondTransitionSlow;
-          break;
-        case 'regular':
-          transitionMillisecond = AnimateConfig.millisecondTransitionRegular;
-          break;
-        case 'fast':
-          transitionMillisecond = AnimateConfig.millisecondTransitionFast;
-          break;
-        default:
-          transitionMillisecond = AnimateConfig.millisecondTransitionRegular;
+  async setMillisecondTransition() {
+    const { transitionSpeed } = this.props;
+    let transitionMillisecond: number;
+
+    if (typeof transitionSpeed === 'number') {
+      transitionMillisecond = transitionSpeed;
+    } else {
+      const configMilissecondOption = AnimateConfig.getMilissecondTransitionByKey(transitionSpeed);
+      if (configMilissecondOption !== undefined) transitionMillisecond = configMilissecondOption;
+      else transitionMillisecond = AnimateConfig.millisecondTransitionRegular;
+    }
+    await this.setState({ transitionMillisecond });
+  }
+
+  async setMillisecondDelay() {
+    const { animationDelay } = this.props;
+    let delayMillisecond: number | undefined;
+
+    if (typeof animationDelay === 'number') {
+      delayMillisecond = animationDelay;
+    } else {
+      if (animationDelay === 'equalTransitionSpeed') {
+        delayMillisecond = this.state.transitionMillisecond;
+      } else {
+        const configMilissecondOption = AnimateConfig.getMilissecondTransitionByKey(animationDelay);
+        if (configMilissecondOption !== undefined) delayMillisecond = configMilissecondOption;
+        else delayMillisecond = undefined;
       }
     }
-    this.setState({ transitionMillisecond });
+    await this.setState({ delayMillisecond });
   }
 
   async updateIsVisibleByStyle(isVisible: boolean) {
@@ -101,21 +114,24 @@ export class Animate extends React.Component<Props, State> {
   }
 
   triggerAnimation(animationType: 'appear' | IAnimationType) {
-    const { transitionMillisecond } = this.state;
+    const { transitionMillisecond, delayMillisecond } = this.state;
     const { styleOpacityValue, styleTranslateXValue, styleTranslateYValue } = this;
     const newStyles = AnimateConfig.animationType[animationType];
 
     Animated.timing(styleOpacityValue, {
+      delay: delayMillisecond,
       toValue: newStyles.opacity,
       duration: transitionMillisecond,
     }).start();
 
     Animated.timing(styleTranslateXValue, {
+      delay: delayMillisecond,
       toValue: newStyles.translateX,
       duration: transitionMillisecond,
     }).start();
 
     Animated.timing(styleTranslateYValue, {
+      delay: delayMillisecond,
       toValue: newStyles.translateY,
       duration: transitionMillisecond,
     }).start(() => {

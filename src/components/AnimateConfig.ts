@@ -1,3 +1,5 @@
+import { IConfigMilissecondOptions } from './AnimateTypes';
+
 export class AnimateConfig {
   static millisecondTransitionFast = 100;
   static millisecondTransitionRegular = 350;
@@ -34,4 +36,18 @@ export class AnimateConfig {
       opacity: 0,
     },
   };
+
+  static getMilissecondTransitionByKey(milissecondOption: IConfigMilissecondOptions | string | number | undefined) {
+    switch (milissecondOption) {
+      case 'slow':
+        return AnimateConfig.millisecondTransitionSlow;
+      case 'regular':
+        return AnimateConfig.millisecondTransitionRegular;
+        break;
+      case 'fast':
+        return AnimateConfig.millisecondTransitionFast;
+      default:
+        return undefined;
+    }
+  }
 }

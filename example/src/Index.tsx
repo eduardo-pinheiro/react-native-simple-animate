@@ -5,7 +5,7 @@ import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 export default class Index extends React.Component<any, any> {
   constructor(props: any) {
     super(props);
-    this.state = { isVisible: false };
+    this.state = { isVisible: true };
   }
 
   render() {
@@ -18,6 +18,7 @@ export default class Index extends React.Component<any, any> {
           <Animate
             isVisible={this.state.isVisible}
             animationType="slideUp"
+            // animationDelay={500}
             transitionSpeed="fast"
             animateCallbackFn={isVisibleInRender => console.log('isVisibleInRender:', isVisibleInRender)}
             unmountComponentWhenInvisible={true}
