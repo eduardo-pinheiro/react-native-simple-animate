@@ -23,7 +23,7 @@ export default class Index extends React.Component<any, any> {
               isVisible={this.state.isVisibleOne}
               animationType="slideUp"
               animationDelay={0}
-              transitionSpeed="slow"
+              transitionSpeed="regular"
               animateCallbackFn={isVisibleInRender => console.log('isVisibleInRender:', isVisibleInRender)}
               /*View Props*/
               style={styles.animate}
@@ -40,8 +40,9 @@ export default class Index extends React.Component<any, any> {
             animationType="slideRight"
             animationDelay={0}
             animationMode="pushFlex"
-            transitionSpeed="slow"
+            transitionSpeed="regular"
             animateCallbackFn={isVisibleInRender => console.log('isVisibleInRender:', isVisibleInRender)}
+            axisValues={{ regular: 0, final: 70 + 15 }}
             /*View Props*/
             style={{ height: 50, width: 70, backgroundColor: '#000', marginRight: 15 }}
           >

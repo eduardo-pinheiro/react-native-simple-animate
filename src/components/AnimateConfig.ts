@@ -1,4 +1,4 @@
-import { IConfigMilissecondOptions, IAnimationType } from './AnimateTypes';
+import { IConfigMilissecondOptions, IAnimationType, IAnimationMode } from './AnimateTypes';
 
 export class AnimateConfig {
   static millisecondTransitionFast = 100;
@@ -7,7 +7,12 @@ export class AnimateConfig {
   static regularAxisValue = 0;
   static finalAxisValue = 50;
 
-  static getAnimationType(animationType: IAnimationType | 'appear', regularAxisValue: number, finalAxisValue: number) {
+  static getAnimationType(
+    animationType: IAnimationType | 'appear',
+    animationMode: IAnimationMode,
+    regularAxisValue: number,
+    finalAxisValue: number,
+  ) {
     const animationsTypeObject = {
       appear: {
         axisX: regularAxisValue,
@@ -21,7 +26,7 @@ export class AnimateConfig {
       },
       slideUp: {
         axisX: regularAxisValue,
-        axisY: finalAxisValue,
+        axisY: animationMode === 'pushFlex' ? finalAxisValue * -1 : finalAxisValue,
         opacity: 0,
       },
       slideDown: {
@@ -35,7 +40,7 @@ export class AnimateConfig {
         opacity: 0,
       },
       slideLeft: {
-        axisX: finalAxisValue,
+        axisX: animationMode === 'pushFlex' ? finalAxisValue * -1 : finalAxisValue,
         axisY: regularAxisValue,
         opacity: 0,
       },
