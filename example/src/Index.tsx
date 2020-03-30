@@ -5,7 +5,7 @@ import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 export default class Index extends React.Component<any, any> {
   constructor(props: any) {
     super(props);
-    this.state = { isVisible: true };
+    this.state = { isVisible: false };
   }
 
   render() {
@@ -21,11 +21,12 @@ export default class Index extends React.Component<any, any> {
             // animationDelay={500}
             transitionSpeed="fast"
             animateCallbackFn={isVisibleInRender => console.log('isVisibleInRender:', isVisibleInRender)}
-            unmountComponentWhenInvisible={true}
             /*View Props*/
             style={styles.animate}
           >
-            <Text style={styles.text}>CONTEND</Text>
+            <View style={styles.textWrapper}>
+              <Text style={styles.text}>CONTEND</Text>
+            </View>
           </Animate>
         </View>
       </View>
@@ -48,9 +49,13 @@ const styles = StyleSheet.create({
     height: 50,
   },
   animate: {
+    flex: 1,
     backgroundColor: '#333333',
     paddingHorizontal: 10,
     paddingVertical: 5,
+  },
+  textWrapper: {
+    flex: 1,
   },
   text: {
     color: '#ffffff',

@@ -10,7 +10,6 @@ export interface AnimateProps {
   animationDelay?: IAnimationDelay;
   transitionSpeed?: ITransitionSpeed;
   animateCallbackFn?: (isVisibleInRender?: boolean) => void;
-  unmountComponentWhenInvisible?: boolean;
 }
 
 type Props = AnimateProps & ViewProps;
@@ -149,7 +148,7 @@ export class Animate extends React.Component<Props, State> {
   }
 
   render() {
-    if (!this.state.isVisibleInRender && this.props.unmountComponentWhenInvisible === true) return null;
+    if (!this.state.isVisibleInRender) return null;
     return (
       <Animated.View
         {...this.props}
