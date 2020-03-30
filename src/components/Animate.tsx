@@ -18,12 +18,16 @@ interface State {
   isVisibleInRender: boolean;
   transitionMillisecond: number;
   delayMillisecond: number | undefined;
+  axisValues: {
+    regular: number;
+    final: number;
+  };
 }
 
 export class Animate extends React.Component<Props, State> {
   styleOpacityValue: Animated.Value = new Animated.Value(0);
-  styleTranslateYValue: Animated.Value = new Animated.Value(0);
-  styleTranslateXValue: Animated.Value = new Animated.Value(0);
+  styleAxisYValue: Animated.Value = new Animated.Value(0);
+  styleAxisXValue: Animated.Value = new Animated.Value(0);
 
   constructor(props: Props) {
     super(props);
@@ -31,6 +35,10 @@ export class Animate extends React.Component<Props, State> {
       isVisibleInRender: false,
       transitionMillisecond: AnimateConfig.millisecondTransitionRegular,
       delayMillisecond: undefined,
+      axisValues: {
+        regular: AnimateConfig.regularAxisValue,
+        final: AnimateConfig.finalAxisValue,
+      },
     };
   }
 
@@ -101,21 +109,22 @@ export class Animate extends React.Component<Props, State> {
   }
 
   setInitialPositionByStyle() {
+    const { axisValues } = this.state;
     let animationType: 'appear' | IAnimationType;
 
     if (this.props.isVisible) animationType = 'appear';
     else animationType = 'opacity' || this.props.animationType;
 
-    const newStyles = AnimateConfig.animationType[animationType];
+    const newStyles = AnimateConfig.getAnimationType(animationType, axisValues.regular, axisValues.final);
     this.styleOpacityValue.setValue(newStyles.opacity);
-    this.styleTranslateXValue.setValue(newStyles.translateX);
-    this.styleTranslateYValue.setValue(newStyles.translateY);
+    this.styleAxisXValue.setValue(newStyles.axisX);
+    this.styleAxisYValue.setValue(newStyles.axisY);
   }
 
   triggerAnimation(animationType: 'appear' | IAnimationType) {
-    const { transitionMillisecond, delayMillisecond } = this.state;
-    const { styleOpacityValue, styleTranslateXValue, styleTranslateYValue } = this;
-    const newStyles = AnimateConfig.animationType[animationType];
+    const { transitionMillisecond, delayMillisecond, axisValues } = this.state;
+    const { styleOpacityValue, styleAxisXValue, styleAxisYValue } = this;
+    const newStyles = AnimateConfig.getAnimationType(animationType, axisValues.regular, axisValues.final);
 
     Animated.timing(styleOpacityValue, {
       delay: delayMillisecond,
@@ -123,15 +132,15 @@ export class Animate extends React.Component<Props, State> {
       duration: transitionMillisecond,
     }).start();
 
-    Animated.timing(styleTranslateXValue, {
+    Animated.timing(styleAxisXValue, {
       delay: delayMillisecond,
-      toValue: newStyles.translateX,
+      toValue: newStyles.axisX,
       duration: transitionMillisecond,
     }).start();
 
-    Animated.timing(styleTranslateYValue, {
+    Animated.timing(styleAxisYValue, {
       delay: delayMillisecond,
-      toValue: newStyles.translateY,
+      toValue: newStyles.axisY,
       duration: transitionMillisecond,
     }).start(() => {
       /*This callback could be stayed in any of before Animated.timing functions*/
@@ -156,8 +165,8 @@ export class Animate extends React.Component<Props, State> {
           this.props.style || {},
           {
             opacity: this.styleOpacityValue,
-            translateX: this.styleTranslateXValue,
-            translateY: this.styleTranslateYValue,
+            translateX: this.styleAxisXValue,
+            translateY: this.styleAxisYValue,
           },
           !this.state.isVisibleInRender && { display: 'none' },
         ]}

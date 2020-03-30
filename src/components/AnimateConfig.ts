@@ -1,41 +1,47 @@
-import { IConfigMilissecondOptions } from './AnimateTypes';
+import { IConfigMilissecondOptions, IAnimationType } from './AnimateTypes';
 
 export class AnimateConfig {
   static millisecondTransitionFast = 100;
   static millisecondTransitionRegular = 350;
   static millisecondTransitionSlow = 500;
-  static animationType = {
-    appear: {
-      translateX: 0,
-      translateY: 0,
-      opacity: 1,
-    },
-    opacity: {
-      translateX: 0,
-      translateY: 0,
-      opacity: 0,
-    },
-    slideUp: {
-      translateX: 0,
-      translateY: 50,
-      opacity: 0,
-    },
-    slideDown: {
-      translateX: 0,
-      translateY: -50,
-      opacity: 0,
-    },
-    slideRight: {
-      translateX: -50,
-      translateY: 0,
-      opacity: 0,
-    },
-    slideLeft: {
-      translateX: 50,
-      translateY: 0,
-      opacity: 0,
-    },
-  };
+  static regularAxisValue = 0;
+  static finalAxisValue = 50;
+
+  static getAnimationType(animationType: IAnimationType | 'appear', regularAxisValue: number, finalAxisValue: number) {
+    const animationsTypeObject = {
+      appear: {
+        axisX: regularAxisValue,
+        axisY: regularAxisValue,
+        opacity: 1,
+      },
+      opacity: {
+        axisX: regularAxisValue,
+        axisY: regularAxisValue,
+        opacity: 0,
+      },
+      slideUp: {
+        axisX: regularAxisValue,
+        axisY: finalAxisValue,
+        opacity: 0,
+      },
+      slideDown: {
+        axisX: regularAxisValue,
+        axisY: finalAxisValue * -1,
+        opacity: 0,
+      },
+      slideRight: {
+        axisX: finalAxisValue * -1,
+        axisY: regularAxisValue,
+        opacity: 0,
+      },
+      slideLeft: {
+        axisX: finalAxisValue,
+        axisY: regularAxisValue,
+        opacity: 0,
+      },
+    };
+    return animationsTypeObject[animationType];
+  }
 
   static getMilissecondTransitionByKey(milissecondOption: IConfigMilissecondOptions | string | number | undefined) {
     switch (milissecondOption) {
@@ -43,7 +49,6 @@ export class AnimateConfig {
         return AnimateConfig.millisecondTransitionSlow;
       case 'regular':
         return AnimateConfig.millisecondTransitionRegular;
-        break;
       case 'fast':
         return AnimateConfig.millisecondTransitionFast;
       default:
