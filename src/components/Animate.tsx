@@ -9,6 +9,7 @@ export interface AnimateProps {
   transitionSpeed?: ITransitionSpeed;
   transitionMillisecond?: number;
   animateCallbackFn?: (isVisibleInRender?: boolean) => void;
+  unmountComponentWhenInvisible?: boolean;
 }
 
 type Props = AnimateProps & ViewProps;
@@ -132,7 +133,7 @@ export class Animate extends React.Component<Props, State> {
   }
 
   render() {
-    if (!this.state.isVisibleInRender) return null;
+    if (!this.state.isVisibleInRender && this.props.unmountComponentWhenInvisible === true) return null;
     return (
       <Animated.View
         {...this.props}
@@ -143,6 +144,7 @@ export class Animate extends React.Component<Props, State> {
             translateX: this.styleTranslateXValue,
             translateY: this.styleTranslateYValue,
           },
+          !this.state.isVisibleInRender && { display: 'none' },
         ]}
       >
         {this.props.children}

@@ -17,9 +17,10 @@ export default class Index extends React.Component<any, any> {
         <View style={styles.wrapperAnimate}>
           <Animate
             isVisible={this.state.isVisible}
-            animationType="opacity"
-            transitionSpeed="slow"
+            animationType="slideUp"
+            transitionSpeed="fast"
             animateCallbackFn={isVisibleInRender => console.log('isVisibleInRender:', isVisibleInRender)}
+            unmountComponentWhenInvisible={true}
             /*View Props*/
             style={styles.animate}
           >
