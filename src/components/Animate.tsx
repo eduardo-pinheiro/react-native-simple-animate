@@ -3,7 +3,7 @@ import { AnimateConfig } from './AnimateConfig';
 import { Animated, ViewProps } from 'react-native';
 import { IAnimationType, ITransitionSpeed } from './AnimateTypes';
 
-export interface IAnimateProps {
+export interface AnimateProps {
   isVisible?: boolean;
   animationType?: IAnimationType;
   transitionSpeed?: ITransitionSpeed;
@@ -11,15 +11,14 @@ export interface IAnimateProps {
   animateCallbackFn?: (isVisibleInRender?: boolean) => void;
 }
 
-type Props = IAnimateProps & ViewProps;
+type Props = AnimateProps & ViewProps;
 
 interface State {
   isVisibleInRender: boolean;
   transitionMillisecond: number;
 }
 
-export class Animate extends React.Component<Props, State>{
-
+export class Animate extends React.Component<Props, State> {
   styleOpacityValue: Animated.Value = new Animated.Value(0);
   styleTranslateYValue: Animated.Value = new Animated.Value(0);
   styleTranslateXValue: Animated.Value = new Animated.Value(0);
@@ -29,7 +28,7 @@ export class Animate extends React.Component<Props, State>{
     this.state = {
       isVisibleInRender: false,
       transitionMillisecond: AnimateConfig.millisecondTransitionRegular,
-    }
+    };
   }
 
   componentDidMount = async () => {
@@ -43,7 +42,7 @@ export class Animate extends React.Component<Props, State>{
     } else {
       this.updateIsVisibleByStyle(true);
     }
-  }
+  };
 
   componentDidUpdate = async (prevProps: Props) => {
     if (this.props.isVisible !== undefined && prevProps.isVisible !== this.props.isVisible) {
@@ -56,7 +55,7 @@ export class Animate extends React.Component<Props, State>{
     ) {
       this.setMillisecondTransition();
     }
-  }
+  };
 
   setMillisecondTransition() {
     let transitionMillisecond = this.props.transitionMillisecond;
@@ -81,10 +80,10 @@ export class Animate extends React.Component<Props, State>{
   async updateIsVisibleByStyle(isVisible: boolean) {
     if (!isVisible) {
       if (this.props.animationType) this.triggerAnimation(this.props.animationType);
-      else this.triggerAnimation("opacity");
+      else this.triggerAnimation('opacity');
     } else {
       await this.setState({ isVisibleInRender: true });
-      this.triggerAnimation("appear");
+      this.triggerAnimation('appear');
     }
   }
 
@@ -92,7 +91,7 @@ export class Animate extends React.Component<Props, State>{
     let animationType: 'appear' | IAnimationType;
 
     if (this.props.isVisible) animationType = 'appear';
-    else animationType = "opacity" || this.props.animationType;
+    else animationType = 'opacity' || this.props.animationType;
 
     const newStyles = AnimateConfig.animationType[animationType];
     this.styleOpacityValue.setValue(newStyles.opacity);
@@ -102,13 +101,7 @@ export class Animate extends React.Component<Props, State>{
 
   triggerAnimation(animationType: 'appear' | IAnimationType) {
     const { transitionMillisecond } = this.state;
-
-    let {
-      styleOpacityValue,
-      styleTranslateXValue,
-      styleTranslateYValue,
-    } = this;
-
+    const { styleOpacityValue, styleTranslateXValue, styleTranslateYValue } = this;
     const newStyles = AnimateConfig.animationType[animationType];
 
     Animated.timing(styleOpacityValue, {
@@ -141,13 +134,19 @@ export class Animate extends React.Component<Props, State>{
   render() {
     if (!this.state.isVisibleInRender) return null;
     return (
-      <Animated.View {...this.props} style={[this.props.style || {}, {
-        opacity: this.styleOpacityValue,
-        translateX: this.styleTranslateXValue,
-        translateY: this.styleTranslateYValue,
-      }]}>
+      <Animated.View
+        {...this.props}
+        style={[
+          this.props.style || {},
+          {
+            opacity: this.styleOpacityValue,
+            translateX: this.styleTranslateXValue,
+            translateY: this.styleTranslateYValue,
+          },
+        ]}
+      >
         {this.props.children}
       </Animated.View>
-    )
+    );
   }
 }

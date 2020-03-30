@@ -1,7 +1,7 @@
 export class AnimateConfig {
-  static millisecondTransitionFast: number = 100;
-  static millisecondTransitionRegular: number = 350;
-  static millisecondTransitionSlow: number = 500;
+  static millisecondTransitionFast = 100;
+  static millisecondTransitionRegular = 350;
+  static millisecondTransitionSlow = 500;
   static animationType = {
     appear: {
       translateX: 0,

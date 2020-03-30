@@ -2,13 +2,10 @@ import React from 'react';
 import { Animate } from './reactComponentLib';
 import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 
-export default class Index extends React.Component<any, any>{
-
+export default class Index extends React.Component<any, any> {
   constructor(props: any) {
     super(props);
-    this.state = {
-      isVisible: false,
-    }
+    this.state = { isVisible: false };
   }
 
   render() {
@@ -20,9 +17,9 @@ export default class Index extends React.Component<any, any>{
         <View style={styles.wrapperAnimate}>
           <Animate
             isVisible={this.state.isVisible}
-            animationType='slideUp'
-            transitionSpeed='fast'
-            animateCallbackFn={(isVisibleInRender) => console.log('isVisibleInRender:', isVisibleInRender)}
+            animationType="opacity"
+            transitionSpeed="slow"
+            animateCallbackFn={isVisibleInRender => console.log('isVisibleInRender:', isVisibleInRender)}
             /*View Props*/
             style={styles.animate}
           >
@@ -30,7 +27,7 @@ export default class Index extends React.Component<any, any>{
           </Animate>
         </View>
       </View>
-    )
+    );
   }
 }
 
@@ -54,6 +51,6 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
   },
   text: {
-    color: '#ffffff'
-  }
+    color: '#ffffff',
+  },
 });
