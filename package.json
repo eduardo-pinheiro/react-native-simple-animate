@@ -8,7 +8,7 @@
     "url": "https://github.com/eduardo-pinheiro/react-native-simple-animate",
     "type": "git"
   },
-  "version": "0.0.3",
+  "version": "0.0.4",
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
   "license": "MIT",
