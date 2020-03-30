@@ -5,29 +5,54 @@ import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 export default class Index extends React.Component<any, any> {
   constructor(props: any) {
     super(props);
-    this.state = { isVisible: false };
+    this.state = {
+      isVisibleOne: false,
+      isVisibleTwo: false,
+    };
   }
 
   render() {
     return (
-      <View style={styles.container}>
-        <TouchableOpacity onPress={() => this.setState({ isVisible: !this.state.isVisible })}>
-          <Text>{`click to ${this.state.isVisible ? 'hide' : 'show'}`}</Text>
-        </TouchableOpacity>
-        <View style={styles.wrapperAnimate}>
+      <View style={{ flex: 1 }}>
+        <View style={styles.container}>
+          <TouchableOpacity onPress={() => this.setState({ isVisibleOne: !this.state.isVisibleOne })}>
+            <Text>{`click to ${this.state.isVisible ? 'hide' : 'show'}`}</Text>
+          </TouchableOpacity>
+          <View style={styles.wrapperAnimate}>
+            <Animate
+              isVisible={this.state.isVisibleOne}
+              animationType="slideUp"
+              animationDelay={0}
+              transitionSpeed="slow"
+              animateCallbackFn={isVisibleInRender => console.log('isVisibleInRender:', isVisibleInRender)}
+              /*View Props*/
+              style={styles.animate}
+            >
+              <View style={styles.textWrapper}>
+                <Text style={styles.text}>CONTEND</Text>
+              </View>
+            </Animate>
+          </View>
+        </View>
+        <View style={{ flex: 1, padding: 15, flexDirection: 'row' }}>
           <Animate
-            isVisible={this.state.isVisible}
-            animationType="slideUp"
-            // animationDelay={500}
+            isVisible={this.state.isVisibleTwo}
+            animationType="slideRight"
+            animationDelay={0}
+            animationMode="pushFlex"
             transitionSpeed="slow"
             animateCallbackFn={isVisibleInRender => console.log('isVisibleInRender:', isVisibleInRender)}
             /*View Props*/
-            style={styles.animate}
+            style={{ height: 50, width: 70, backgroundColor: '#000', marginRight: 15 }}
           >
-            <View style={styles.textWrapper}>
-              <Text style={styles.text}>CONTEND</Text>
-            </View>
+            <Text style={styles.text}>CONTEND</Text>
           </Animate>
+          <TouchableOpacity
+            style={{ flex: 1, maxHeight: 50, backgroundColor: '#c7c7c7' }}
+            onPress={() => this.setState({ isVisibleTwo: !this.state.isVisibleTwo })}
+          >
+            <Text>{`click to ${this.state.isVisible ? 'hide' : 'show'}`}</Text>
+          </TouchableOpacity>
         </View>
       </View>
     );
@@ -39,11 +64,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'space-evenly',
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
   },
   wrapperAnimate: {
     height: 50,

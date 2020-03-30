@@ -156,8 +156,35 @@ export class Animate extends React.Component<Props, State> {
     }
   }
 
+  getAxisStyleByAnimationMode() {
+    const { animationMode, animationType } = this.props;
+
+    switch (animationMode) {
+      case 'pushFlex':
+        switch (animationType) {
+          case 'slideDown':
+            return { marginTop: this.styleAxisYValue };
+          case 'slideUp':
+            return { marginBottom: this.styleAxisYValue };
+          case 'slideLeft':
+            return { marginRight: this.styleAxisXValue };
+          case 'slideRight':
+            return { marginLeft: this.styleAxisXValue };
+          default:
+            return {};
+        }
+      default:
+        return {
+          translateX: this.styleAxisXValue,
+          translateY: this.styleAxisYValue,
+        };
+    }
+  }
+
   render() {
     if (!this.state.isVisibleInRender) return null;
+    const axisStyle = this.getAxisStyleByAnimationMode();
+
     return (
       <Animated.View
         {...this.props}
@@ -165,8 +192,7 @@ export class Animate extends React.Component<Props, State> {
           this.props.style || {},
           {
             opacity: this.styleOpacityValue,
-            translateX: this.styleAxisXValue,
-            translateY: this.styleAxisYValue,
+            ...axisStyle,
           },
         ]}
       >
