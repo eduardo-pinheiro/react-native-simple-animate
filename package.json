@@ -14,8 +14,8 @@
   "license": "MIT",
   "types": "dist/index.d.ts",
   "dependencies": {
-    "react": "^16.9.13",
-    "react-native": "^16.9.13"
+    "react": "16.8.3",
+    "react-native": "34.0.0"
   },
   "devDependencies": {
     "@types/react": "^16.9.13",
