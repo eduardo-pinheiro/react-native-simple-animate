@@ -142,9 +142,9 @@ export class Animate extends React.Component<Props, State> {
       delay: delayMillisecond,
       toValue: newStyles.axisY,
       duration: transitionMillisecond,
-    }).start(() => {
+    }).start(({ finished }) => {
       /*This callback could be stayed in any of before Animated.timing functions*/
-      this.updateIsVisibleInRender();
+      if (finished) this.updateIsVisibleInRender();
     });
   }
 
@@ -168,7 +168,6 @@ export class Animate extends React.Component<Props, State> {
             translateX: this.styleAxisXValue,
             translateY: this.styleAxisYValue,
           },
-          !this.state.isVisibleInRender && { display: 'none' },
         ]}
       >
         {this.props.children}
