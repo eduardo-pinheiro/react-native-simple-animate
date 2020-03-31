@@ -4,13 +4,13 @@ import { Animated, ViewProps } from 'react-native';
 import { IAnimationType, ITransitionSpeed, IAnimationDelay, IAnimationMode, IAxisValues } from './AnimateTypes';
 
 export interface AnimateProps {
-  isVisible?: boolean;
-  animationType?: IAnimationType;
-  animationMode?: IAnimationMode;
-  animationDelay?: IAnimationDelay;
-  transitionSpeed?: ITransitionSpeed;
-  animateCallbackFn?: (isVisibleInRender?: boolean) => void;
-  axisValues?: IAxisValues;
+  isVisible?: boolean; // Default appear behavior
+  animationType?: IAnimationType; // Default "opacity"
+  animationMode?: IAnimationMode; // Default "translate"
+  animationDelay?: IAnimationDelay; // Default undefined
+  transitionSpeed?: ITransitionSpeed; // Default "regular"
+  animateCallbackFn?: (isVisibleInRender?: boolean) => void; // Default undefined
+  axisValues?: IAxisValues; // Default {regular: 0, final: 50}
 }
 
 type Props = AnimateProps & ViewProps;

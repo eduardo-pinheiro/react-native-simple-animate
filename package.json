@@ -8,14 +8,12 @@
     "url": "https://github.com/eduardo-pinheiro/react-native-simple-animate",
     "type": "git"
   },
-  "version": "0.0.4",
+  "version": "0.0.5",
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
   "license": "MIT",
   "types": "dist/index.d.ts",
   "dependencies": {
-    "react": ">0.0.0",
-    "react-native": ">0.0.0"
   },
   "devDependencies": {
     "@types/react": "^16.9.13",
@@ -43,7 +41,6 @@
     "start-example": "cd example && expo start -c",
     "dev": "concurrently --kill-others \"npm run build-watch\" \"npm run start-example\"",
     "test": "ts-node test/test.ts",
-    "pretest": "npm run build",
     "test:lint": "eslint ./src/**/*.ts ./src/**/*.tsx ./example/src/**/*.ts ./example/src/**/*.tsx",
     "test:lint:fix": "npm run test:lint -- --fix"
   },
