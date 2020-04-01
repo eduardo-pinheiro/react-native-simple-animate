@@ -42,12 +42,10 @@ export default class Index extends React.Component<any, any> {
             animationMode="pushFlex"
             transitionSpeed="regular"
             animateCallbackFn={isVisibleInRender => console.log('isVisibleInRender:', isVisibleInRender)}
-            axisValues={{ regular: 0, final: 70 + 15 }}
+            axisValues={{ onScreen: 0, outScreen: 15 }}
             /*View Props*/
-            style={{ height: 50, width: 70, backgroundColor: '#000', marginRight: 15 }}
-          >
-            <Text style={styles.text}>CONTEND</Text>
-          </Animate>
+            style={{ height: 50, width: 10, backgroundColor: '#000', marginRight: 5 }}
+          />
           <TouchableOpacity
             style={{ flex: 1, maxHeight: 50, backgroundColor: '#c7c7c7' }}
             onPress={() => this.setState({ isVisibleTwo: !this.state.isVisibleTwo })}

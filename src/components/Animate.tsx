@@ -10,7 +10,7 @@ export interface AnimateProps {
   animationDelay?: IAnimationDelay; // Default undefined
   transitionSpeed?: ITransitionSpeed; // Default "regular"
   animateCallbackFn?: (isVisibleInRender?: boolean) => void; // Default undefined
-  axisValues?: IAxisValues; // Default {regular: 0, final: 50}
+  axisValues?: IAxisValues; // Default {onScreen: 0, outScreen: 50}
 }
 
 type Props = AnimateProps & ViewProps;
@@ -34,8 +34,8 @@ export class Animate extends React.Component<Props, State> {
       transitionMillisecond: AnimateConfig.millisecondTransitionRegular,
       delayMillisecond: undefined,
       axisValues: {
-        regular: AnimateConfig.regularAxisValue,
-        final: AnimateConfig.finalAxisValue,
+        onScreen: AnimateConfig.onScreenAxisValue,
+        outScreen: AnimateConfig.outScreenAxisValue,
       },
     };
   }
@@ -116,8 +116,8 @@ export class Animate extends React.Component<Props, State> {
     const newStyles = AnimateConfig.getAnimationType(
       animationType,
       animationMode,
-      axisValues.regular,
-      axisValues.final,
+      axisValues.onScreen,
+      axisValues.outScreen,
     );
     this.styleOpacityValue.setValue(newStyles.opacity);
     this.styleAxisXValue.setValue(newStyles.axisX);
@@ -128,8 +128,8 @@ export class Animate extends React.Component<Props, State> {
     let { axisValues } = this.props;
     if (axisValues === undefined) {
       axisValues = {
-        regular: AnimateConfig.regularAxisValue,
-        final: AnimateConfig.finalAxisValue,
+        onScreen: AnimateConfig.onScreenAxisValue,
+        outScreen: AnimateConfig.outScreenAxisValue,
       };
     }
     this.setState({ axisValues });
@@ -142,8 +142,8 @@ export class Animate extends React.Component<Props, State> {
     const newStyles = AnimateConfig.getAnimationType(
       animationType,
       animationMode,
-      axisValues.regular,
-      axisValues.final,
+      axisValues.onScreen,
+      axisValues.outScreen,
     );
 
     Animated.timing(styleOpacityValue, {

@@ -4,44 +4,44 @@ export class AnimateConfig {
   static millisecondTransitionFast = 100;
   static millisecondTransitionRegular = 350;
   static millisecondTransitionSlow = 500;
-  static regularAxisValue = 0;
-  static finalAxisValue = 50;
+  static onScreenAxisValue = 0;
+  static outScreenAxisValue = 50;
 
   static getAnimationType(
     animationType: IAnimationType | 'appear',
     animationMode: IAnimationMode,
-    regularAxisValue: number,
-    finalAxisValue: number,
+    onScreenAxisValue: number,
+    outScreenAxisValue: number,
   ) {
     const animationsTypeObject = {
       appear: {
-        axisX: regularAxisValue,
-        axisY: regularAxisValue,
+        axisX: onScreenAxisValue,
+        axisY: onScreenAxisValue,
         opacity: 1,
       },
       opacity: {
-        axisX: regularAxisValue,
-        axisY: regularAxisValue,
+        axisX: onScreenAxisValue,
+        axisY: onScreenAxisValue,
         opacity: 0,
       },
       slideUp: {
-        axisX: regularAxisValue,
-        axisY: animationMode === 'pushFlex' ? finalAxisValue * -1 : finalAxisValue,
+        axisX: onScreenAxisValue,
+        axisY: animationMode === 'pushFlex' ? outScreenAxisValue * -1 : outScreenAxisValue,
         opacity: 0,
       },
       slideDown: {
-        axisX: regularAxisValue,
-        axisY: finalAxisValue * -1,
+        axisX: onScreenAxisValue,
+        axisY: outScreenAxisValue * -1,
         opacity: 0,
       },
       slideRight: {
-        axisX: finalAxisValue * -1,
-        axisY: regularAxisValue,
+        axisX: outScreenAxisValue * -1,
+        axisY: onScreenAxisValue,
         opacity: 0,
       },
       slideLeft: {
-        axisX: animationMode === 'pushFlex' ? finalAxisValue * -1 : finalAxisValue,
-        axisY: regularAxisValue,
+        axisX: animationMode === 'pushFlex' ? outScreenAxisValue * -1 : outScreenAxisValue,
+        axisY: onScreenAxisValue,
         opacity: 0,
       },
     };
