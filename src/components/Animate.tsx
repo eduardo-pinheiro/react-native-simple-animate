@@ -138,7 +138,7 @@ export class Animate extends React.Component<Props, State> {
     const { animationMode } = this.props;
     const { transitionMillisecond, delayMillisecond, axisValues } = this.state;
     const { styleOpacityValue, styleAxisXValue, styleAxisYValue } = this;
-    const newStyles = AnimateConfig.getAnimationType(
+    const newStyleValues = AnimateConfig.getAnimationType(
       animationType,
       animationMode,
       axisValues.onScreen,
@@ -146,20 +146,20 @@ export class Animate extends React.Component<Props, State> {
     );
 
     Animated.timing(styleOpacityValue, {
+      toValue: newStyleValues.opacity,
       delay: delayMillisecond,
-      toValue: newStyles.opacity,
       duration: transitionMillisecond,
     }).start();
 
     Animated.timing(styleAxisXValue, {
+      toValue: newStyleValues.axisX,
       delay: delayMillisecond,
-      toValue: newStyles.axisX,
       duration: transitionMillisecond,
     }).start();
 
     Animated.timing(styleAxisYValue, {
+      toValue: newStyleValues.axisY,
       delay: delayMillisecond,
-      toValue: newStyles.axisY,
       duration: transitionMillisecond,
     }).start(({ finished }) => {
       /*This callback could be stayed in any of before Animated.timing functions*/
