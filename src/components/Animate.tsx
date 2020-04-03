@@ -47,7 +47,6 @@ export class Animate extends React.Component<Props, State> {
     if (this.props.isVisible !== undefined) {
       const isVisibleInRender = this.props.isVisible;
       this.updateIsVisibleByStyle(isVisibleInRender);
-      this.setState({ isVisibleInRender });
       this.setMillisecondTransition();
       this.setMillisecondDelay();
     } else {
@@ -111,7 +110,7 @@ export class Animate extends React.Component<Props, State> {
     let animationType: 'appear' | IAnimationType;
 
     if (isVisible) animationType = 'appear';
-    else animationType = 'opacity' || this.props.animationType;
+    else animationType = this.props.animationType || 'opacity';
 
     const newStyles = AnimateConfig.getAnimationType(
       animationType,
