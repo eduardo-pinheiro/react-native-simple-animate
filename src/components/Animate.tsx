@@ -41,8 +41,8 @@ export class Animate extends React.Component<Props, State> {
   }
 
   componentDidMount = async () => {
+    await this.setAxisValues();
     this.setInitialPositionByStyle();
-    this.setAxisValues();
 
     if (this.props.isVisible !== undefined) {
       const isVisibleInRender = this.props.isVisible;
@@ -124,7 +124,7 @@ export class Animate extends React.Component<Props, State> {
     this.styleAxisYValue.setValue(newStyles.axisY);
   }
 
-  setAxisValues() {
+  async setAxisValues() {
     let { axisValues } = this.props;
     if (axisValues === undefined) {
       axisValues = {
@@ -132,7 +132,7 @@ export class Animate extends React.Component<Props, State> {
         outScreen: AnimateConfig.outScreenAxisValue,
       };
     }
-    this.setState({ axisValues });
+    await this.setState({ axisValues });
   }
 
   triggerAnimation(animationType: 'appear' | IAnimationType) {

@@ -22,8 +22,8 @@ export default class Index extends React.Component<any, any> {
             <Animate
               isVisible={this.state.isVisibleOne}
               animationType="slideUp"
-              animationDelay={0}
-              transitionSpeed="regular"
+              animationDelay="slow"
+              transitionSpeed="fast"
               animateCallbackFn={isVisibleInRender => console.log('isVisibleInRender:', isVisibleInRender)}
               /*View Props*/
               style={styles.animate}
