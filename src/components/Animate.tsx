@@ -42,13 +42,13 @@ export class Animate extends React.Component<Props, State> {
 
   componentDidMount = async () => {
     await this.setAxisValues();
-    this.setInitialPositionByStyle();
+    await this.setInitialPositionByStyle();
 
     if (this.props.isVisible !== undefined) {
       const isVisibleInRender = this.props.isVisible;
+      await this.setMillisecondTransition();
+      await this.setMillisecondDelay();
       this.updateIsVisibleByStyle(isVisibleInRender);
-      this.setMillisecondTransition();
-      this.setMillisecondDelay();
     } else {
       this.updateIsVisibleByStyle(true);
     }
@@ -62,7 +62,7 @@ export class Animate extends React.Component<Props, State> {
       this.updateIsVisibleByStyle(this.props.isVisible);
   };
 
-  setMillisecondTransition() {
+  async setMillisecondTransition() {
     const { transitionSpeed } = this.props;
     let transitionMillisecond: number;
 
@@ -73,10 +73,10 @@ export class Animate extends React.Component<Props, State> {
       if (configMilissecondOption !== undefined) transitionMillisecond = configMilissecondOption;
       else transitionMillisecond = AnimateConfig.millisecondTransitionRegular;
     }
-    this.setState({ transitionMillisecond });
+    await this.setState({ transitionMillisecond });
   }
 
-  setMillisecondDelay() {
+  async setMillisecondDelay() {
     const { animationDelay } = this.props;
     let delayMillisecond: number | undefined;
 
@@ -91,7 +91,7 @@ export class Animate extends React.Component<Props, State> {
         else delayMillisecond = undefined;
       }
     }
-    this.setState({ delayMillisecond });
+    await this.setState({ delayMillisecond });
   }
 
   updateIsVisibleByStyle(isVisible: boolean) {
@@ -104,7 +104,7 @@ export class Animate extends React.Component<Props, State> {
     }
   }
 
-  setInitialPositionByStyle() {
+  async setInitialPositionByStyle() {
     const { animationMode, isVisible } = this.props;
     const { axisValues } = this.state;
     let animationType: 'appear' | IAnimationType;
@@ -118,9 +118,9 @@ export class Animate extends React.Component<Props, State> {
       axisValues.onScreen,
       axisValues.outScreen,
     );
-    this.styleOpacityValue.setValue(newStyles.opacity);
-    this.styleAxisXValue.setValue(newStyles.axisX);
-    this.styleAxisYValue.setValue(newStyles.axisY);
+    await this.styleOpacityValue.setValue(newStyles.opacity);
+    await this.styleAxisXValue.setValue(newStyles.axisX);
+    await this.styleAxisYValue.setValue(newStyles.axisY);
   }
 
   async setAxisValues() {
