@@ -1,7 +1,7 @@
 import React from 'react';
 import { AnimateConfig } from './AnimateConfig';
 import { Animated, ViewProps } from 'react-native';
-import { IAnimationType, ITransitionSpeed, IAnimationDelay, IAxisValues } from './AnimateTypes';
+import { IAnimationType, ITransitionSpeed, IAnimationDelay } from './AnimateTypes';
 
 export interface AnimateProps {
   isVisible?: boolean; // Default appear behavior
@@ -9,7 +9,7 @@ export interface AnimateProps {
   animationDelay?: IAnimationDelay; // Default undefined
   transitionSpeed?: ITransitionSpeed; // Default "regular"
   animateCallbackFn?: (isVisibleInRender?: boolean) => void; // Default undefined
-  axisValues?: IAxisValues; // Default {onScreen: 0, outScreen: 50}
+  movePoints?: number; // Default AnimateConfig.movePoints
 }
 
 type Props = AnimateProps & ViewProps;
@@ -18,7 +18,7 @@ interface State {
   isVisibleInRender: boolean;
   transitionMillisecond: number;
   delayMillisecond: number | undefined;
-  axisValues: IAxisValues;
+  movePoints: number;
 }
 
 export class Animate extends React.Component<Props, State> {
@@ -32,15 +32,12 @@ export class Animate extends React.Component<Props, State> {
       isVisibleInRender: false,
       transitionMillisecond: AnimateConfig.millisecondTransitionRegular,
       delayMillisecond: undefined,
-      axisValues: {
-        onScreen: AnimateConfig.onScreenAxisValue,
-        outScreen: AnimateConfig.outScreenAxisValue,
-      },
+      movePoints: AnimateConfig.movePoints,
     };
   }
 
   componentDidMount = async () => {
-    await this.setAxisValues();
+    await this.setMovePoints();
     await this.setInitialPositionByStyle();
 
     if (this.props.isVisible !== undefined) {
@@ -56,7 +53,7 @@ export class Animate extends React.Component<Props, State> {
   componentDidUpdate = async (prevProps: Props) => {
     if (prevProps.transitionSpeed !== this.props.transitionSpeed) this.setMillisecondTransition();
     if (prevProps.animationDelay !== this.props.animationDelay) this.setMillisecondDelay();
-    if (prevProps.axisValues !== this.props.axisValues) this.setAxisValues();
+    if (prevProps.movePoints !== this.props.movePoints) this.setMovePoints();
     if (this.props.isVisible !== undefined && prevProps.isVisible !== this.props.isVisible)
       this.updateIsVisibleByStyle(this.props.isVisible);
   };
@@ -105,33 +102,28 @@ export class Animate extends React.Component<Props, State> {
 
   async setInitialPositionByStyle() {
     const { isVisible } = this.props;
-    const { axisValues } = this.state;
+    const { movePoints } = this.state;
     let animationType: 'appear' | IAnimationType;
 
     if (isVisible) animationType = 'appear';
     else animationType = this.props.animationType || 'opacity';
 
-    const newStyles = AnimateConfig.getAnimationType(animationType, axisValues.onScreen, axisValues.outScreen);
+    const newStyles = AnimateConfig.getAnimationType(animationType, movePoints);
     await this.styleOpacityValue.setValue(newStyles.opacity);
     await this.styleAxisXValue.setValue(newStyles.axisX);
     await this.styleAxisYValue.setValue(newStyles.axisY);
   }
 
-  async setAxisValues() {
-    let { axisValues } = this.props;
-    if (axisValues === undefined) {
-      axisValues = {
-        onScreen: AnimateConfig.onScreenAxisValue,
-        outScreen: AnimateConfig.outScreenAxisValue,
-      };
-    }
-    await this.setState({ axisValues });
+  async setMovePoints() {
+    let { movePoints } = this.props;
+    if (movePoints === undefined) movePoints = AnimateConfig.movePoints;
+    await this.setState({ movePoints });
   }
 
   triggerAnimation(animationType: 'appear' | IAnimationType) {
-    const { transitionMillisecond, delayMillisecond, axisValues } = this.state;
+    const { transitionMillisecond, delayMillisecond, movePoints } = this.state;
     const { styleOpacityValue, styleAxisXValue, styleAxisYValue } = this;
-    const newStyleValues = AnimateConfig.getAnimationType(animationType, axisValues.onScreen, axisValues.outScreen);
+    const newStyleValues = AnimateConfig.getAnimationType(animationType, movePoints);
 
     Animated.timing(styleOpacityValue, {
       toValue: newStyleValues.opacity,

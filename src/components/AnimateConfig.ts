@@ -4,43 +4,38 @@ export class AnimateConfig {
   static millisecondTransitionFast = 100;
   static millisecondTransitionRegular = 350;
   static millisecondTransitionSlow = 500;
-  static onScreenAxisValue = 0;
-  static outScreenAxisValue = 50;
+  static movePoints = 50;
 
-  static getAnimationType(
-    animationType: IAnimationType | 'appear',
-    onScreenAxisValue: number,
-    outScreenAxisValue: number,
-  ) {
+  static getAnimationType(animationType: IAnimationType | 'appear', movePoints: number) {
     const animationsTypeObject = {
       appear: {
-        axisX: onScreenAxisValue,
-        axisY: onScreenAxisValue,
+        axisX: 0,
+        axisY: 0,
         opacity: 1,
       },
       opacity: {
-        axisX: onScreenAxisValue,
-        axisY: onScreenAxisValue,
+        axisX: 0,
+        axisY: 0,
         opacity: 0,
       },
       slideUp: {
-        axisX: onScreenAxisValue,
-        axisY: outScreenAxisValue,
+        axisX: 0,
+        axisY: movePoints,
         opacity: 0,
       },
       slideDown: {
-        axisX: onScreenAxisValue,
-        axisY: outScreenAxisValue * -1,
+        axisX: 0,
+        axisY: movePoints * -1,
         opacity: 0,
       },
       slideRight: {
-        axisX: outScreenAxisValue * -1,
-        axisY: onScreenAxisValue,
+        axisX: movePoints * -1,
+        axisY: 0,
         opacity: 0,
       },
       slideLeft: {
-        axisX: outScreenAxisValue,
-        axisY: onScreenAxisValue,
+        axisX: movePoints,
+        axisY: 0,
         opacity: 0,
       },
     };
