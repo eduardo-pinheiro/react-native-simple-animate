@@ -40,11 +40,11 @@ export class Animate extends React.Component<Props, State> {
   componentDidMount = async () => {
     await this.setMovePoints();
     await this.setInitialPositionByStyle();
+    await this.setMillisecondTransition();
+    await this.setMillisecondDelay();
 
     if (this.props.isVisible !== undefined) {
       const isVisibleInRender = this.props.isVisible;
-      await this.setMillisecondTransition();
-      await this.setMillisecondDelay();
       this.updateIsVisibleByStyle(isVisibleInRender);
     } else {
       this.updateIsVisibleByStyle(true);
@@ -158,6 +158,8 @@ export class Animate extends React.Component<Props, State> {
       const isVisibleInRender = this.props.isVisible;
       if (this.props.animateCallbackFn) this.props.animateCallbackFn(isVisibleInRender);
       this.setState({ isVisibleInRender });
+    } else {
+      if (this.props.animateCallbackFn) this.props.animateCallbackFn(true);
     }
   }
 

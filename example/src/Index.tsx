@@ -20,8 +20,8 @@ export default class Index extends React.Component<any, any> {
           <Animate
             isVisible={this.state.isVisible} // Default appear behavior
             animationType="slideRight" // Default "opacity"
-            animationDelay={undefined} // Default undefined
-            transitionSpeed="slow" // Default "regular"
+            animationDelay="equalTransitionSpeed" // Default undefined
+            transitionSpeed="fast" // Default "regular"
             movePoints={undefined} // Default AnimateConfig.movePoints
             neverRemoveFromRender={undefined} // Default false
             animateCallbackFn={isVisibleInRender => console.log('isVisibleInRender:', isVisibleInRender)} // Default undefined
