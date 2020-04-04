@@ -149,18 +149,21 @@ export class Animate extends React.Component<Props, State> {
       toValue: newStyleValues.opacity,
       delay: delayMillisecond,
       duration: transitionMillisecond,
+      useNativeDriver: true,
     }).start();
 
     Animated.timing(styleAxisXValue, {
       toValue: newStyleValues.axisX,
       delay: delayMillisecond,
       duration: transitionMillisecond,
+      useNativeDriver: true,
     }).start();
 
     Animated.timing(styleAxisYValue, {
       toValue: newStyleValues.axisY,
       delay: delayMillisecond,
       duration: transitionMillisecond,
+      useNativeDriver: true,
     }).start(({ finished }) => {
       /*This callback could be stayed in any of before Animated.timing functions*/
       if (finished) this.updateIsVisibleInRender();
@@ -193,6 +196,13 @@ export class Animate extends React.Component<Props, State> {
             return {};
         }
       default:
+        // return {
+        //   transform: [
+        //     {
+        //       scaleX: this.styleAxisXValue,
+        //     },
+        //   ],
+        // };
         return {
           translateX: this.styleAxisXValue,
           translateY: this.styleAxisYValue,

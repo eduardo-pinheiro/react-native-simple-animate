@@ -39,7 +39,7 @@ export default class Index extends React.Component<any, any> {
             isVisible={this.state.isVisibleTwo}
             animationType="slideRight"
             animationDelay={0}
-            animationMode="pushFlex"
+            animationMode="translate"
             transitionSpeed="regular"
             animateCallbackFn={isVisibleInRender => console.log('isVisibleInRender:', isVisibleInRender)}
             axisValues={{ onScreen: 0, outScreen: 15 }}
