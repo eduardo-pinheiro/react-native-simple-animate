@@ -138,6 +138,7 @@ export class Animate extends React.Component<Props, State> {
     const { animationMode } = this.props;
     const { transitionMillisecond, delayMillisecond, axisValues } = this.state;
     const { styleOpacityValue, styleAxisXValue, styleAxisYValue } = this;
+    const useNativeDriver = this.props.animationMode !== 'pushFlex';
     const newStyleValues = AnimateConfig.getAnimationType(
       animationType,
       animationMode,
@@ -149,21 +150,21 @@ export class Animate extends React.Component<Props, State> {
       toValue: newStyleValues.opacity,
       delay: delayMillisecond,
       duration: transitionMillisecond,
-      useNativeDriver: true,
+      useNativeDriver,
     }).start();
 
     Animated.timing(styleAxisXValue, {
       toValue: newStyleValues.axisX,
       delay: delayMillisecond,
       duration: transitionMillisecond,
-      useNativeDriver: true,
+      useNativeDriver,
     }).start();
 
     Animated.timing(styleAxisYValue, {
       toValue: newStyleValues.axisY,
       delay: delayMillisecond,
       duration: transitionMillisecond,
-      useNativeDriver: true,
+      useNativeDriver,
     }).start(({ finished }) => {
       /*This callback could be stayed in any of before Animated.timing functions*/
       if (finished) this.updateIsVisibleInRender();
@@ -196,16 +197,8 @@ export class Animate extends React.Component<Props, State> {
             return {};
         }
       default:
-        // return {
-        //   transform: [
-        //     {
-        //       scaleX: this.styleAxisXValue,
-        //     },
-        //   ],
-        // };
         return {
-          translateX: this.styleAxisXValue,
-          translateY: this.styleAxisYValue,
+          transform: [{ translateX: this.styleAxisXValue }, { translateY: this.styleAxisYValue }],
         };
     }
   }
