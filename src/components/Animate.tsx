@@ -1,12 +1,11 @@
 import React from 'react';
 import { AnimateConfig } from './AnimateConfig';
 import { Animated, ViewProps } from 'react-native';
-import { IAnimationType, ITransitionSpeed, IAnimationDelay, IAnimationMode, IAxisValues } from './AnimateTypes';
+import { IAnimationType, ITransitionSpeed, IAnimationDelay, IAxisValues } from './AnimateTypes';
 
 export interface AnimateProps {
   isVisible?: boolean; // Default appear behavior
   animationType?: IAnimationType; // Default "opacity"
-  animationMode?: IAnimationMode; // Default "translate"
   animationDelay?: IAnimationDelay; // Default undefined
   transitionSpeed?: ITransitionSpeed; // Default "regular"
   animateCallbackFn?: (isVisibleInRender?: boolean) => void; // Default undefined
@@ -105,19 +104,14 @@ export class Animate extends React.Component<Props, State> {
   }
 
   async setInitialPositionByStyle() {
-    const { animationMode, isVisible } = this.props;
+    const { isVisible } = this.props;
     const { axisValues } = this.state;
     let animationType: 'appear' | IAnimationType;
 
     if (isVisible) animationType = 'appear';
     else animationType = this.props.animationType || 'opacity';
 
-    const newStyles = AnimateConfig.getAnimationType(
-      animationType,
-      animationMode,
-      axisValues.onScreen,
-      axisValues.outScreen,
-    );
+    const newStyles = AnimateConfig.getAnimationType(animationType, axisValues.onScreen, axisValues.outScreen);
     await this.styleOpacityValue.setValue(newStyles.opacity);
     await this.styleAxisXValue.setValue(newStyles.axisX);
     await this.styleAxisYValue.setValue(newStyles.axisY);
@@ -135,36 +129,29 @@ export class Animate extends React.Component<Props, State> {
   }
 
   triggerAnimation(animationType: 'appear' | IAnimationType) {
-    const { animationMode } = this.props;
     const { transitionMillisecond, delayMillisecond, axisValues } = this.state;
     const { styleOpacityValue, styleAxisXValue, styleAxisYValue } = this;
-    const useNativeDriver = this.props.animationMode !== 'pushFlex';
-    const newStyleValues = AnimateConfig.getAnimationType(
-      animationType,
-      animationMode,
-      axisValues.onScreen,
-      axisValues.outScreen,
-    );
+    const newStyleValues = AnimateConfig.getAnimationType(animationType, axisValues.onScreen, axisValues.outScreen);
 
     Animated.timing(styleOpacityValue, {
       toValue: newStyleValues.opacity,
       delay: delayMillisecond,
       duration: transitionMillisecond,
-      useNativeDriver,
+      useNativeDriver: true,
     }).start();
 
     Animated.timing(styleAxisXValue, {
       toValue: newStyleValues.axisX,
       delay: delayMillisecond,
       duration: transitionMillisecond,
-      useNativeDriver,
+      useNativeDriver: true,
     }).start();
 
     Animated.timing(styleAxisYValue, {
       toValue: newStyleValues.axisY,
       delay: delayMillisecond,
       duration: transitionMillisecond,
-      useNativeDriver,
+      useNativeDriver: true,
     }).start(({ finished }) => {
       /*This callback could be stayed in any of before Animated.timing functions*/
       if (finished) this.updateIsVisibleInRender();
@@ -179,34 +166,8 @@ export class Animate extends React.Component<Props, State> {
     }
   }
 
-  getAxisStyleByAnimationMode() {
-    const { animationMode, animationType } = this.props;
-
-    switch (animationMode) {
-      case 'pushFlex':
-        switch (animationType) {
-          case 'slideDown':
-            return { marginTop: this.styleAxisYValue };
-          case 'slideUp':
-            return { marginBottom: this.styleAxisYValue };
-          case 'slideLeft':
-            return { marginRight: this.styleAxisXValue };
-          case 'slideRight':
-            return { marginLeft: this.styleAxisXValue };
-          default:
-            return {};
-        }
-      default:
-        return {
-          transform: [{ translateX: this.styleAxisXValue }, { translateY: this.styleAxisYValue }],
-        };
-    }
-  }
-
   render() {
     if (!this.state.isVisibleInRender) return null;
-    const axisStyle = this.getAxisStyleByAnimationMode();
-
     return (
       <Animated.View
         {...this.props}
@@ -214,7 +175,7 @@ export class Animate extends React.Component<Props, State> {
           this.props.style || {},
           {
             opacity: this.styleOpacityValue,
-            ...axisStyle,
+            transform: [{ translateX: this.styleAxisXValue }, { translateY: this.styleAxisYValue }],
           },
         ]}
       >

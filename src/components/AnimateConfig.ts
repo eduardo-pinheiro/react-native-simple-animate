@@ -1,4 +1,4 @@
-import { IConfigMilissecondOptions, IAnimationType, IAnimationMode } from './AnimateTypes';
+import { IConfigMilissecondOptions, IAnimationType } from './AnimateTypes';
 
 export class AnimateConfig {
   static millisecondTransitionFast = 100;
@@ -9,7 +9,6 @@ export class AnimateConfig {
 
   static getAnimationType(
     animationType: IAnimationType | 'appear',
-    animationMode: IAnimationMode,
     onScreenAxisValue: number,
     outScreenAxisValue: number,
   ) {
@@ -26,7 +25,7 @@ export class AnimateConfig {
       },
       slideUp: {
         axisX: onScreenAxisValue,
-        axisY: animationMode === 'pushFlex' ? outScreenAxisValue * -1 : outScreenAxisValue,
+        axisY: outScreenAxisValue,
         opacity: 0,
       },
       slideDown: {
@@ -40,7 +39,7 @@ export class AnimateConfig {
         opacity: 0,
       },
       slideLeft: {
-        axisX: animationMode === 'pushFlex' ? outScreenAxisValue * -1 : outScreenAxisValue,
+        axisX: outScreenAxisValue,
         axisY: onScreenAxisValue,
         opacity: 0,
       },
