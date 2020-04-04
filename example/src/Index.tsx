@@ -19,10 +19,11 @@ export default class Index extends React.Component<any, any> {
         <View style={styles.wrapperAnimate}>
           <Animate
             isVisible={this.state.isVisible} // Default appear behavior
-            animationType="slideUp" // Default "opacity"
+            animationType="slideRight" // Default "opacity"
             animationDelay={undefined} // Default undefined
             transitionSpeed="slow" // Default "regular"
             movePoints={undefined} // Default AnimateConfig.movePoints
+            neverRemoveFromRender={undefined} // Default false
             animateCallbackFn={isVisibleInRender => console.log('isVisibleInRender:', isVisibleInRender)} // Default undefined
             /*View Props*/
             style={styles.animate}

@@ -10,6 +10,7 @@ export interface AnimateProps {
   transitionSpeed?: ITransitionSpeed; // Default "regular"
   animateCallbackFn?: (isVisibleInRender?: boolean) => void; // Default undefined
   movePoints?: number; // Default AnimateConfig.movePoints
+  neverRemoveFromRender?: boolean; // Default false
 }
 
 type Props = AnimateProps & ViewProps;
@@ -22,7 +23,7 @@ interface State {
 }
 
 export class Animate extends React.Component<Props, State> {
-  styleOpacityValue: Animated.Value = new Animated.Value(0);
+  styleOpacityValue: Animated.Value = new Animated.Value(this.props.neverRemoveFromRender ? 1 : 0);
   styleAxisYValue: Animated.Value = new Animated.Value(0);
   styleAxisXValue: Animated.Value = new Animated.Value(0);
 
@@ -101,7 +102,7 @@ export class Animate extends React.Component<Props, State> {
   }
 
   async setInitialPositionByStyle() {
-    const { isVisible } = this.props;
+    const { isVisible, neverRemoveFromRender } = this.props;
     const { movePoints } = this.state;
     let animationType: 'appear' | IAnimationType;
 
@@ -109,7 +110,7 @@ export class Animate extends React.Component<Props, State> {
     else animationType = this.props.animationType || 'opacity';
 
     const newStyles = AnimateConfig.getAnimationType(animationType, movePoints);
-    await this.styleOpacityValue.setValue(newStyles.opacity);
+    await this.styleOpacityValue.setValue(neverRemoveFromRender ? 1 : newStyles.opacity);
     await this.styleAxisXValue.setValue(newStyles.axisX);
     await this.styleAxisYValue.setValue(newStyles.axisY);
   }
@@ -125,12 +126,14 @@ export class Animate extends React.Component<Props, State> {
     const { styleOpacityValue, styleAxisXValue, styleAxisYValue } = this;
     const newStyleValues = AnimateConfig.getAnimationType(animationType, movePoints);
 
-    Animated.timing(styleOpacityValue, {
-      toValue: newStyleValues.opacity,
-      delay: delayMillisecond,
-      duration: transitionMillisecond,
-      useNativeDriver: true,
-    }).start();
+    if (!this.props.neverRemoveFromRender) {
+      Animated.timing(styleOpacityValue, {
+        toValue: newStyleValues.opacity,
+        delay: delayMillisecond,
+        duration: transitionMillisecond,
+        useNativeDriver: true,
+      }).start();
+    }
 
     Animated.timing(styleAxisXValue, {
       toValue: newStyleValues.axisX,
@@ -159,7 +162,7 @@ export class Animate extends React.Component<Props, State> {
   }
 
   render() {
-    if (!this.state.isVisibleInRender) return null;
+    if (!this.state.isVisibleInRender && !this.props.neverRemoveFromRender) return null;
     return (
       <Animated.View
         {...this.props}
