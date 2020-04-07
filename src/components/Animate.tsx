@@ -109,10 +109,10 @@ export class Animate extends React.Component<Props, State> {
     if (isVisible) animationType = 'appear';
     else animationType = this.props.animationType || 'opacity';
 
-    const newStyles = AnimateConfig.getAnimationType(animationType, movePoints);
-    await this.styleOpacityValue.setValue(disableOpacityAnimation ? 1 : newStyles.opacity);
-    await this.styleAxisXValue.setValue(newStyles.axisX);
-    await this.styleAxisYValue.setValue(newStyles.axisY);
+    const newStyleValues = AnimateConfig.getAnimationType(animationType, movePoints);
+    await this.styleOpacityValue.setValue(disableOpacityAnimation ? 1 : newStyleValues.opacity);
+    await this.styleAxisXValue.setValue(newStyleValues.axisX);
+    await this.styleAxisYValue.setValue(newStyleValues.axisY);
   }
 
   async setMovePoints() {
