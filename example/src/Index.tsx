@@ -23,9 +23,9 @@ export default class Index extends React.Component<any, any> {
           </TouchableOpacity>
           <Animate
             isVisible={this.state.isVisibleTranslate} // Default appear behavior
-            animationType="slideUp" // Default "opacity"
-            animationDelay="equalTransitionSpeed" // Default undefined
-            transitionSpeed="fast" // Default "regular"
+            animationType={'slideUp'} // Default "opacity"
+            animationDelay={undefined} // Default undefined
+            transitionSpeed={2000} // Default "regular"
             movePoints={undefined} // Default AnimateConfig.movePoints
             disableOpacityAnimation={undefined} // Default false
             neverRemoveFromRender={undefined} // Default false
@@ -46,9 +46,10 @@ export default class Index extends React.Component<any, any> {
           </TouchableOpacity>
           <Animate
             isVisible={this.state.isVisiblePushFlex} // Default appear behavior
-            animationType="slideLeft" // Default "opacity"
-            // animationDelay="equalTransitionSpeed" // Default undefined
-            // transitionSpeed="slow" // Default "regular"
+            animationType={'slideLeft'} // Default "opacity"
+            transitionSpeed={2000} // Default "regular"
+            animationMode={'pushFlex'}
+            animationDelay={undefined} // Default undefined
             movePoints={110} // Default AnimateConfig.movePoints
             disableOpacityAnimation={undefined} // Default false
             neverRemoveFromRender={undefined} // Default false
