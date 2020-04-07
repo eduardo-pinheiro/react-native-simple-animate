@@ -11,6 +11,7 @@ export interface AnimateProps {
   animateCallbackFn?: (isVisibleInRender?: boolean) => void; // Default undefined
   movePoints?: number; // Default AnimateConfig.movePoints
   disableOpacityAnimation?: boolean; // Default false
+  neverRemoveFromRender?: boolean; // Default false
 }
 
 type Props = AnimateProps & ViewProps;
@@ -164,7 +165,7 @@ export class Animate extends React.Component<Props, State> {
   }
 
   render() {
-    if (!this.state.isVisibleInRender) return null;
+    if (!this.state.isVisibleInRender && !this.props.neverRemoveFromRender) return null;
     return (
       <Animated.View
         {...this.props}
