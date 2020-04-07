@@ -1,4 +1,4 @@
-import { IConfigMilissecondOptions, IAnimationType } from './AnimateTypes';
+import { IConfigMilissecondOptions, IAnimationType, IAnimationMode } from './AnimateTypes';
 
 export class AnimateConfig {
   static millisecondTransitionFast = 100;
@@ -6,7 +6,11 @@ export class AnimateConfig {
   static millisecondTransitionSlow = 500;
   static movePoints = 50;
 
-  static getAnimationType(animationType: IAnimationType | 'appear', movePoints: number) {
+  static getAnimationType(
+    animationType: IAnimationType | 'appear',
+    movePoints: number,
+    animationMode?: IAnimationMode,
+  ) {
     const animationsTypeObject = {
       appear: {
         axisX: 0,
@@ -20,7 +24,7 @@ export class AnimateConfig {
       },
       slideUp: {
         axisX: 0,
-        axisY: movePoints,
+        axisY: animationMode ? movePoints * -1 : movePoints,
         opacity: 0,
       },
       slideDown: {
@@ -34,7 +38,7 @@ export class AnimateConfig {
         opacity: 0,
       },
       slideLeft: {
-        axisX: movePoints,
+        axisX: animationMode ? movePoints * -1 : movePoints,
         axisY: 0,
         opacity: 0,
       },

@@ -1,7 +1,7 @@
 import React from 'react';
 import { AnimateConfig } from './AnimateConfig';
 import { Animated, ViewProps } from 'react-native';
-import { IAnimationType, ITransitionSpeed, IAnimationDelay } from './AnimateTypes';
+import { IAnimationType, ITransitionSpeed, IAnimationDelay, IAnimationMode } from './AnimateTypes';
 
 export interface AnimateProps {
   isVisible?: boolean; // Default appear behavior
@@ -11,6 +11,8 @@ export interface AnimateProps {
   animateCallbackFn?: (isVisibleInRender?: boolean) => void; // Default undefined
   movePoints?: number; // Default AnimateConfig.movePoints
   disableOpacityAnimation?: boolean; // Default false
+  neverRemoveFromRender?: boolean; // Default false
+  animationMode?: IAnimationMode;
 }
 
 type Props = AnimateProps & ViewProps;
@@ -102,17 +104,17 @@ export class Animate extends React.Component<Props, State> {
   }
 
   async setInitialPositionByStyle() {
-    const { isVisible, disableOpacityAnimation } = this.props;
+    const { isVisible, disableOpacityAnimation, animationMode } = this.props;
     const { movePoints } = this.state;
     let animationType: 'appear' | IAnimationType;
 
     if (isVisible) animationType = 'appear';
     else animationType = this.props.animationType || 'opacity';
 
-    const newStyleValues = AnimateConfig.getAnimationType(animationType, movePoints);
-    await this.styleOpacityValue.setValue(disableOpacityAnimation ? 1 : newStyleValues.opacity);
-    await this.styleAxisXValue.setValue(newStyleValues.axisX);
-    await this.styleAxisYValue.setValue(newStyleValues.axisY);
+    const newStyles = AnimateConfig.getAnimationType(animationType, movePoints, animationMode);
+    await this.styleOpacityValue.setValue(disableOpacityAnimation ? 1 : newStyles.opacity);
+    await this.styleAxisXValue.setValue(newStyles.axisX);
+    await this.styleAxisYValue.setValue(newStyles.axisY);
   }
 
   async setMovePoints() {
@@ -124,14 +126,16 @@ export class Animate extends React.Component<Props, State> {
   triggerAnimation(animationType: 'appear' | IAnimationType) {
     const { transitionMillisecond, delayMillisecond, movePoints } = this.state;
     const { styleOpacityValue, styleAxisXValue, styleAxisYValue } = this;
-    const newStyleValues = AnimateConfig.getAnimationType(animationType, movePoints);
+    const { animationMode, disableOpacityAnimation } = this.props;
+    const newStyleValues = AnimateConfig.getAnimationType(animationType, movePoints, animationMode);
+    const useNativeDriver = animationMode !== 'pushFlex';
 
-    if (!this.props.disableOpacityAnimation) {
+    if (!disableOpacityAnimation) {
       Animated.timing(styleOpacityValue, {
         toValue: newStyleValues.opacity,
         delay: delayMillisecond,
         duration: transitionMillisecond,
-        useNativeDriver: true,
+        useNativeDriver,
       }).start();
     }
 
@@ -139,14 +143,14 @@ export class Animate extends React.Component<Props, State> {
       toValue: newStyleValues.axisX,
       delay: delayMillisecond,
       duration: transitionMillisecond,
-      useNativeDriver: true,
+      useNativeDriver,
     }).start();
 
     Animated.timing(styleAxisYValue, {
       toValue: newStyleValues.axisY,
       delay: delayMillisecond,
       duration: transitionMillisecond,
-      useNativeDriver: true,
+      useNativeDriver,
     }).start(({ finished }) => {
       /*This callback could be stayed in any of before Animated.timing functions*/
       if (finished) this.updateIsVisibleInRender();
@@ -163,19 +167,44 @@ export class Animate extends React.Component<Props, State> {
     }
   }
 
+  getAnimatedStyle() {
+    const { animationMode, animationType } = this.props;
+    let animatedStyle: Record<string, any> = {};
+
+    switch (animationMode) {
+      case 'pushFlex':
+        switch (animationType) {
+          case 'slideDown':
+            animatedStyle = { marginTop: this.styleAxisYValue };
+            break;
+          case 'slideUp':
+            animatedStyle = { marginBottom: this.styleAxisYValue };
+            break;
+          case 'slideLeft':
+            animatedStyle = { marginRight: this.styleAxisXValue };
+            break;
+          case 'slideRight':
+            animatedStyle = { marginLeft: this.styleAxisXValue };
+            break;
+          default:
+            return {};
+        }
+        break;
+
+      default:
+        animatedStyle = { transform: [{ translateX: this.styleAxisXValue }, { translateY: this.styleAxisYValue }] };
+    }
+
+    animatedStyle.opacity = this.styleOpacityValue;
+    return animatedStyle;
+  }
+
   render() {
-    if (!this.state.isVisibleInRender) return null;
+    if (!this.state.isVisibleInRender && !this.props.neverRemoveFromRender) return null;
+    const animatedStyle = this.getAnimatedStyle();
+
     return (
-      <Animated.View
-        {...this.props}
-        style={[
-          this.props.style || {},
-          {
-            opacity: this.styleOpacityValue,
-            transform: [{ translateX: this.styleAxisXValue }, { translateY: this.styleAxisYValue }],
-          },
-        ]}
-      >
+      <Animated.View {...this.props} style={[this.props.style || {}, animatedStyle]}>
         {this.props.children}
       </Animated.View>
     );
