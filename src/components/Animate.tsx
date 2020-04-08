@@ -200,12 +200,21 @@ export class Animate extends React.Component<Props, State> {
   }
 
   render() {
-    let invisibleStyle = {};
-    if (!this.state.isVisibleInRender && !this.props.neverRemove) invisibleStyle = { display: 'none' };
     const animatedStyle = this.getAnimatedStyle();
+    let invisibleStyle = {};
+    let pointerEvents = undefined;
+
+    if (!this.state.isVisibleInRender && !this.props.neverRemove) {
+      invisibleStyle = { display: 'none' };
+      pointerEvents = 'none';
+    }
 
     return (
-      <Animated.View {...this.props} style={[this.props.style || {}, animatedStyle, invisibleStyle]}>
+      <Animated.View
+        {...this.props}
+        pointerEvents={pointerEvents}
+        style={[this.props.style || {}, animatedStyle, invisibleStyle]}
+      >
         {this.props.children}
       </Animated.View>
     );
