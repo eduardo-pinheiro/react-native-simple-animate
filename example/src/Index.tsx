@@ -28,7 +28,7 @@ export default class Index extends React.Component<any, any> {
             transitionSpeed={2000} // Default "regular"
             movePoints={undefined} // Default AnimateConfig.movePoints
             disableOpacityAnimation={undefined} // Default false
-            neverRemoveFromRender={undefined} // Default false
+            neverRemove={undefined} // Default false
             animateCallbackFn={isVisibleInRender => console.log('isVisibleInRender:', isVisibleInRender)} // Default undefined
           >
             <View style={styles.translateContent}>
@@ -52,7 +52,7 @@ export default class Index extends React.Component<any, any> {
             animationDelay={undefined} // Default undefined
             movePoints={110} // Default AnimateConfig.movePoints
             disableOpacityAnimation={undefined} // Default false
-            neverRemoveFromRender={undefined} // Default false
+            neverRemove={undefined} // Default false
             animateCallbackFn={isVisibleInRender => console.log('isVisibleInRender:', isVisibleInRender)} // Default undefined
           >
             <View style={styles.pushFlexContent}>
